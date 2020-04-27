@@ -1,9 +1,9 @@
 <template>
-  <v-app-bar app color="red darken-4" dark clipped-left>
-    <v-toolbar-title>
+  <v-app-bar app color="red darken-4" dark>
+    <v-toolbar-title class="font-weight-light">
       <v-btn text class="text-none font-weight-light headline" @click="$router.push('/')">
         <span>My</span>
-        <span class="font-weight-regular">STORE</span>
+        <span class="font-weight-regular">StoreProject</span>
       </v-btn>
     </v-toolbar-title>
 
@@ -19,9 +19,30 @@
             <span class="mr-2">{{ user.displayName }}</span>
             <v-icon>mdi-menu-down</v-icon>
           </v-btn>
+          <v-badge color="error" overlap>
+            <template v-slot:badge>{{ cart.items.length }}</template>
+            <v-btn text @click="$router.push('/cart')">
+              <v-icon>mdi-cart</v-icon>
+            </v-btn>
+          </v-badge>
         </template>
 
         <v-list>
+          <v-list-item>
+            <v-list-item-title>
+              <v-btn block text to="/myorders">My Orders</v-btn>
+            </v-list-item-title>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-title>
+              <v-btn block text to="/cart">Cart</v-btn>
+            </v-list-item-title>
+          </v-list-item>
+          <v-list-item v-if="user.roles && user.roles.admin">
+            <v-list-item-title>
+              <v-btn block text to="/inventory">Inventory</v-btn>
+            </v-list-item-title>
+          </v-list-item>
           <v-list-item>
             <v-list-item-title>
               <v-btn block text @click="logOut">Logout</v-btn>
@@ -37,6 +58,11 @@
 import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'NavBar',
+  data() {
+    return {
+      cart: {},
+    }
+  },
   computed: {
     ...mapGetters({
       user: 'getUser',
@@ -46,7 +72,7 @@ export default {
     logOut() {
       this.$firebase.auth().signOut()
       this.setUser('')
-      this.$router.push('/login')
+      this.$router.push('/')
     },
     ...mapActions(['setUser']),
   },

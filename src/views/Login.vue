@@ -8,8 +8,8 @@ export default {
   mounted() {
     const uiConfig = {
       callbacks: {
-        signInSuccessWithAuthResult: authResult => {
-          this.$store.dispatch('setUser', authResult.user)
+        signInSuccessWithAuthResult: async data => {
+          this.$store.dispatch('setUser', data.user)
           this.$router.push('/')
           return false
         },
@@ -20,5 +20,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped></style>
