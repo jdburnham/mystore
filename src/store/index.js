@@ -6,7 +6,7 @@ import { db } from '../plugins/firebase'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   state: {
     user: '',
   },
@@ -31,6 +31,13 @@ export default new Vuex.Store({
         await userRef.set(userObject, { merge: true })
         const userDB = await userRef.get()
         commit('settingUser', { uid: user.uid, ...userDB.data() })
+        await db
+          .collection('cart')
+          .doc(user.uid)
+          .set({
+            items: [],
+            total: 0,
+          })
       } else {
         commit('settingUser', '')
       }
@@ -38,3 +45,5 @@ export default new Vuex.Store({
   },
   plugins: [createPersistedState()],
 })
+
+export default store
